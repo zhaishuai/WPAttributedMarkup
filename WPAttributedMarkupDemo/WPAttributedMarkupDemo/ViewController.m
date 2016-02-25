@@ -41,17 +41,17 @@
     
     NSDictionary* style3 = @{@"body":[UIFont fontWithName:@"HelveticaNeue" size:22.0],
                              @"help":[WPAttributedStyleAction styledActionWithAction:^(int v){
-                                 NSLog(@"Help action");
+                                 NSLog(@"Help action %d", v);
                              }],
                              @"settings":[WPAttributedStyleAction styledActionWithAction:^(int v){
-                                 NSLog(@"Settings action");
+                                 NSLog(@"Settings action %d", v);
                              }],
                              @"link": [UIColor orangeColor]};
     
   
     self.label1.attributedText = [@"Attributed <bold>Bold</bold> <red>Red</red> text" attributedStringWithStyleBook:style1];
     self.label2.attributedText = [@"<thumb> </thumb> Multiple <u>styles</u> text <thumb> </thumb>" attributedStringWithStyleBook:style2];
-    self.label3.attributedText = [@"Tap <help>here</help> to show help or <settings>here</settings> to show settings" attributedStringWithStyleBook:style3];
+    self.label3.attributedText = [@"Tap <help#a=4>here</help> to show help or <settings#a=1>here</settings> to show settings" attributedStringWithStyleBook:style3];
 
 }
 

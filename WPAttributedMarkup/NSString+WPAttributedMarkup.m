@@ -15,7 +15,7 @@ NSString* kWPAttributedMarkupLinkName = @"WPAttributedMarkupLinkName";
 
 @implementation NSString (WPAttributedMarkup)
 
--(NSAttributedString*)attributedStringWithStyleBook:(NSDictionary*)fontbook 
+-(NSAttributedString*)attributedStringWithStyleBook:(NSDictionary*)fontbook
 {
     // Find string ranges
     NSMutableArray* tags = [[NSMutableArray alloc] initWithCapacity:16];
@@ -38,26 +38,33 @@ NSString* kWPAttributedMarkupLinkName = @"WPAttributedMarkupLinkName";
     for (NSDictionary* tag in tags) {
         NSString* t = tag[@"tag"];
         NSString *v = tag[@"value"];
-       // //NSLog(@"v=%@",v);
         NSNumber* loc = tag[@"loc"];
         NSNumber* endloc = tag[@"endloc"];
         if (loc != nil && endloc != nil) {
             NSRange range = NSMakeRange([loc integerValue], [endloc integerValue] - [loc integerValue]);
             NSArray* style;
-           
-            
-            style = fontbook[t];
-            
-            NSMutableDictionary *style2=[[NSMutableDictionary alloc] initWithDictionary:style[0]];
-            [style2 setObject:v forKey:@"value"];
-            
-            NSMutableArray *arr = [[NSMutableArray alloc] init];
-            
-            [arr addObject:style2];
-            [arr addObject:style[1]];
-//            //NSLog (@"style=%@",arr);
-            if (arr) {
-                [self styleAttributedString:as range:range withStyle:arr withStyleBook:fontbook];
+            if([fontbook[t] isKindOfClass:[NSArray class]]&&[fontbook[t] count] == 2 && [fontbook[t][0] isKindOfClass:[NSDictionary class]]){
+                style = fontbook[t];
+                
+                NSMutableDictionary *style2=[[NSMutableDictionary alloc] initWithDictionary:style[0]];
+                [style2 setObject:v forKey:@"value"];
+                
+                NSMutableArray *arr = [[NSMutableArray alloc] init];
+                
+                [arr addObject:style2];
+                [arr addObject:style[1]];
+                
+                if (arr) {
+                    [self styleAttributedString:as range:range withStyle:arr withStyleBook:fontbook];
+                }
+            }else{
+                if (loc != nil && endloc != nil) {
+                    NSRange range = NSMakeRange([loc integerValue], [endloc integerValue] - [loc integerValue]);
+                    NSObject* style = fontbook[t];
+                    if (style) {
+                        [self styleAttributedString:as range:range withStyle:style withStyleBook:fontbook];
+                    }
+                }
             }
         }
     }
@@ -88,7 +95,7 @@ NSString* kWPAttributedMarkupLinkName = @"WPAttributedMarkupLinkName";
         NSTextAttachment* attachment = [[NSTextAttachment alloc] init];
         attachment.image = (UIImage*)style;
         [as replaceCharactersInRange:range withAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-//        [as insertAttributedString:imageAttrString atIndex:range.location];
+        //        [as insertAttributedString:imageAttrString atIndex:range.location];
     }
 }
 
@@ -134,7 +141,7 @@ NSString* kWPAttributedMarkupLinkName = @"WPAttributedMarkupLinkName";
 -(void)setLink:(NSURL*)url range:(NSRange)range onAttributedString:(NSMutableAttributedString*)as
 {
     [as removeAttribute:kWPAttributedMarkupLinkName range:range]; // Work around for Apple leak
-    if (link)
+    //    if (link)
     {
         [as addAttribute:kWPAttributedMarkupLinkName value:[url absoluteString] range:range];
     }

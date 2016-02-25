@@ -35,9 +35,14 @@
             NSDictionary* dict = array[i];
             NSString* dtag = dict[@"tag"];
             NSArray *a = [dtag componentsSeparatedByString:@"#"];
-            NSString *m = [NSString stringWithFormat:@"%@>",a[0]];
+            NSString *m = @"";
+            if(a.count == 2){
+                m = [NSString stringWithFormat:@"%@>",a[0]];
+            }else{
+                m = [NSString stringWithFormat:@"%@",a[0]];
+            }
             int vv = 0;
-            NSString *b;
+            NSString *b = @"";
             if (a.count > 1) {
                 b =  [[a[1] componentsSeparatedByString:@"="][1] componentsSeparatedByString:@">"][0];
                 vv = [b intValue];
@@ -49,7 +54,7 @@
                 if ([loc integerValue] < range.location) {
                     [array removeObjectAtIndex:i];
                     NSString* strippedTag = [openTag substringWithRange:NSMakeRange(1, openTag.length-2)];
-                    [array addObject:@{@"loc":loc, @"tag":strippedTag,@"value":b ,@"endloc":@(range.location)}];
+                    [array addObject:@{@"loc":loc, @"tag":strippedTag,@"value":[[NSNumber alloc] initWithInt:vv] ,@"endloc":@(range.location)}];
                 }
                 break;
             }
@@ -65,5 +70,40 @@
     while ([self replaceFirstTagItoArray:array]) {};
 }
 
+
+
+
+/*
+ if (isEndTag) {
+ // Find matching open tag
+ NSString* openTag = [tag stringByReplacingOccurrencesOfString:@"</" withString:@"<"];
+ NSInteger count = array.count;
+ for (NSInteger i=count-1; i>=0; i--) {
+ NSDictionary* dict = array[i];
+ NSString* dtag = dict[@"tag"];
+ NSArray *a = [dtag componentsSeparatedByString:@"#"];
+ NSString *m = [NSString stringWithFormat:@"%@>",a[0]];
+ int vv = 0;
+ NSString *b;
+ if (a.count > 1) {
+ b =  [[a[1] componentsSeparatedByString:@"="][1] componentsSeparatedByString:@">"][0];
+ vv = [b intValue];
+ 
+ }
+ 
+ if ([m isEqualToString:openTag]) {
+ NSNumber* loc = dict[@"loc"];
+ if ([loc integerValue] < range.location) {
+ [array removeObjectAtIndex:i];
+ NSString* strippedTag = [openTag substringWithRange:NSMakeRange(1, openTag.length-2)];
+ [array addObject:@{@"loc":loc, @"tag":strippedTag,@"value":b ,@"endloc":@(range.location)}];
+ }
+ break;
+ }
+ }
+ } else {
+ [array addObject:@{@"loc":@(range.location), @"tag":tag}];
+ }
+*/
 
 @end
