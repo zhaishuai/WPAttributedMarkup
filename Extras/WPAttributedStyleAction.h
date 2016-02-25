@@ -12,8 +12,8 @@
 
 @property (readwrite, copy) void (^action) ();
 
-- (instancetype)initWithAction:(void (^)())action;
-+(NSArray*)styledActionWithAction:(void (^)())action;
+- (instancetype)initWithAction:(void (^)(int v))action;
++(NSArray*)styledActionWithAction:(void (^)(int v))action;
 -(NSArray*)styledAction;
 
 

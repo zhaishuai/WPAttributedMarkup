@@ -40,10 +40,10 @@
                                 @"thumb":[UIImage imageNamed:@"thumbIcon"] };
     
     NSDictionary* style3 = @{@"body":[UIFont fontWithName:@"HelveticaNeue" size:22.0],
-                             @"help":[WPAttributedStyleAction styledActionWithAction:^{
+                             @"help":[WPAttributedStyleAction styledActionWithAction:^(int v){
                                  NSLog(@"Help action");
                              }],
-                             @"settings":[WPAttributedStyleAction styledActionWithAction:^{
+                             @"settings":[WPAttributedStyleAction styledActionWithAction:^(int v){
                                  NSLog(@"Settings action");
                              }],
                              @"link": [UIColor orangeColor]};

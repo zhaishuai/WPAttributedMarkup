@@ -34,12 +34,22 @@
         for (NSInteger i=count-1; i>=0; i--) {
             NSDictionary* dict = array[i];
             NSString* dtag = dict[@"tag"];
-            if ([dtag isEqualToString:openTag]) {
+            NSArray *a = [dtag componentsSeparatedByString:@"#"];
+            NSString *m = [NSString stringWithFormat:@"%@>",a[0]];
+            int vv = 0;
+            NSString *b;
+            if (a.count > 1) {
+                b =  [[a[1] componentsSeparatedByString:@"="][1] componentsSeparatedByString:@">"][0];
+                vv = [b intValue];
+                
+            }
+            
+            if ([m isEqualToString:openTag]) {
                 NSNumber* loc = dict[@"loc"];
                 if ([loc integerValue] < range.location) {
                     [array removeObjectAtIndex:i];
                     NSString* strippedTag = [openTag substringWithRange:NSMakeRange(1, openTag.length-2)];
-                    [array addObject:@{@"loc":loc, @"tag":strippedTag, @"endloc":@(range.location)}];
+                    [array addObject:@{@"loc":loc, @"tag":strippedTag,@"value":b ,@"endloc":@(range.location)}];
                 }
                 break;
             }

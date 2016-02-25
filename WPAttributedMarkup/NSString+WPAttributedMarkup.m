@@ -15,7 +15,7 @@ NSString* kWPAttributedMarkupLinkName = @"WPAttributedMarkupLinkName";
 
 @implementation NSString (WPAttributedMarkup)
 
--(NSAttributedString*)attributedStringWithStyleBook:(NSDictionary*)fontbook
+-(NSAttributedString*)attributedStringWithStyleBook:(NSDictionary*)fontbook 
 {
     // Find string ranges
     NSMutableArray* tags = [[NSMutableArray alloc] initWithCapacity:16];
@@ -23,7 +23,6 @@ NSString* kWPAttributedMarkupLinkName = @"WPAttributedMarkupLinkName";
     
     [ms replaceOccurrencesOfString:@"<br>" withString:@"\n" options:NSCaseInsensitiveSearch range:NSMakeRange(0, ms.length)];
     [ms replaceOccurrencesOfString:@"<br />" withString:@"\n" options:NSCaseInsensitiveSearch range:NSMakeRange(0, ms.length)];
-    
     [ms replaceAllTagsIntoArray:tags];
     
     NSMutableAttributedString* as = [[NSMutableAttributedString alloc] initWithString:ms];
@@ -35,16 +34,30 @@ NSString* kWPAttributedMarkupLinkName = @"WPAttributedMarkupLinkName";
     if (bodyStyle) {
         [self styleAttributedString:as range:NSMakeRange(0, as.length) withStyle:bodyStyle withStyleBook:fontbook];
     }
-
+    
     for (NSDictionary* tag in tags) {
         NSString* t = tag[@"tag"];
+        NSString *v = tag[@"value"];
+       // //NSLog(@"v=%@",v);
         NSNumber* loc = tag[@"loc"];
         NSNumber* endloc = tag[@"endloc"];
         if (loc != nil && endloc != nil) {
             NSRange range = NSMakeRange([loc integerValue], [endloc integerValue] - [loc integerValue]);
-            NSObject* style = fontbook[t];
-            if (style) {
-                [self styleAttributedString:as range:range withStyle:style withStyleBook:fontbook];
+            NSArray* style;
+           
+            
+            style = fontbook[t];
+            
+            NSMutableDictionary *style2=[[NSMutableDictionary alloc] initWithDictionary:style[0]];
+            [style2 setObject:v forKey:@"value"];
+            
+            NSMutableArray *arr = [[NSMutableArray alloc] init];
+            
+            [arr addObject:style2];
+            [arr addObject:style[1]];
+//            //NSLog (@"style=%@",arr);
+            if (arr) {
+                [self styleAttributedString:as range:range withStyle:arr withStyleBook:fontbook];
             }
         }
     }

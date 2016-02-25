@@ -38,10 +38,13 @@
     [self setOnTap:^(CGPoint pt) {
         // Locate the text attributes at the touched position
         NSDictionary* attributes = [weakSelf textAttributesAtPoint:pt];
+        
         // If the touched attributes contains our custom action style, execute the action block
         WPAttributedStyleAction* actionStyle = attributes[@"WPAttributedStyleAction"];
+        NSString *vv = attributes[@"value"];
+        
         if (actionStyle) {
-            actionStyle.action();
+            actionStyle.action([vv intValue]);
         }
     }];
 }
